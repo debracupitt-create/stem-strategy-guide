@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STEM Engagement Strategy Guide</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.2.0/docx.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+  :root {
+    --primary: #1A1A1A;
+    --secondary: #555;
+    --tertiary: #888;
+    --border: #D0D0D0;
+    --border-light: #E8E8E8;
+    --bg-subtle: #F7F7F7;
+    --bg-page: #FFF;
+    --success: #2E7D32;
+    --success-light: #E8F5E9;
+    --amber: #E65100;
+    --amber-light: #FFF3E0;
+    --purple: #6A1B9A;
+    --purple-light: #F3E5F5;
+    --blue: #2E75B6;
+    --blue-light: #EBF2FA;
+    --red: #C62828;
+    --red-light: #FFEBEE;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Inter, Arial, Helvetica, sans-serif; color: var(--primary); font-size: 15px; line-height: 1.6; background: var(--bg-page); }
+
+  h1, h2, h3, .section-title, .intro-hero h1, .metrics-group-title, .export-section h3, .export-preview h4 {
+    font-family: Georgia, 'Times New Roman', serif;
+  }
+
+  .header { background: var(--primary); color: var(--bg-page); padding: 18px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .header-left { font-family: Georgia, serif; font-size: 15px; font-weight: bold; }
+  .header-left small { font-family: Inter, Arial, sans-serif; font-weight: normal; opacity: 0.7; font-size: 12px; display: block; margin-top: 2px; }
+  .header-right { font-size: 11px; opacity: 0.6; text-align: right; }
+
+  .progress-bar-container { background: var(--bg-page); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border); }
+  .progress-steps { display: flex; max-width: 860px; margin: 0 auto; }
+  .progress-step { flex: 1; padding: 13px 8px; text-align: center; font-size: 11px; font-weight: 700; color: var(--tertiary); cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; }
+  .progress-step.active { color: var(--primary); border-bottom-color: var(--primary); }
+  .progress-step.completed { color: var(--success); border-bottom-color: var(--success); }
+  .progress-step .step-num { display: inline-block; width: 20px; height: 20px; line-height: 20px; background: var(--border); color: var(--bg-page); font-size: 10px; margin-right: 3px; vertical-align: middle; text-align: center; border-radius: 2px; }
+  .progress-step.active .step-num { background: var(--primary); }
+  .progress-step.completed .step-num { background: var(--success); }
+
+  .main { max-width: 760px; margin: 0 auto; padding: 40px 24px 80px; }
+  .section { display: none; }
+  .section.active { display: block; }
+  .section-title { font-size: 24px; font-weight: bold; color: var(--primary); margin-bottom: 8px; }
+  .section-lead { font-size: 15px; color: var(--secondary); margin-bottom: 28px; line-height: 1.55; }
+
+  .intro-hero { background: var(--primary); color: var(--bg-page); padding: 44px 32px; text-align: center; margin: -40px -24px 32px; }
+  .intro-hero h1 { font-size: 26px; margin-bottom: 10px; }
+  .intro-hero p { font-family: Inter, Arial, sans-serif; font-size: 15px; opacity: 0.85; max-width: 580px; margin: 0 auto; line-height: 1.5; }
+
+  .option-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+  .option-card { border: 2px solid var(--border); padding: 16px; cursor: pointer; transition: all 0.15s; position: relative; }
+  .option-card:hover { border-color: var(--secondary); background: var(--bg-subtle); }
+  .option-card.selected { border-color: var(--primary); background: var(--bg-subtle); }
+  .option-card.selected::after { content: '\2713'; position: absolute; top: 8px; right: 8px; background: var(--primary); color: white; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+  .option-card h3 { font-family: Georgia, serif; font-size: 14px; color: var(--primary); margin-bottom: 4px; }
+  .option-card p { font-size: 13px; color: var(--secondary); line-height: 1.4; }
+
+  .tips-section { margin-top: 28px; border: 1px solid var(--border); overflow: hidden; }
+  .tips-header { padding: 11px 16px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; background: var(--bg-subtle); font-size: 12px; font-weight: 700; color: var(--secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+  .tips-header:hover { background: var(--border-light); }
+  .tips-header .arrow { transition: transform 0.3s; font-size: 14px; }
+  .tips-header.open .arrow { transform: rotate(180deg); }
+  .tips-content { display: none; padding: 16px; background: var(--bg-page); border-top: 1px solid var(--border-light); }
+  .tips-content.open { display: block; }
+  .tip-item { padding: 12px 0; border-bottom: 1px solid var(--border-light); font-size: 13px; line-height: 1.55; color: var(--secondary); }
+  .tip-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .tip-label { display: inline-block; font-family: Inter, Arial, sans-serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; margin-bottom: 4px; }
+  .tip-label.sme { background: var(--amber-light); color: var(--amber); }
+  .tip-label.regional { background: var(--purple-light); color: var(--purple); }
+  .tip-label.mature { background: var(--blue-light); color: var(--blue); }
+
+  .stocktake-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+  .stocktake-table th { background: var(--primary); color: var(--bg-page); padding: 10px 12px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
+  .stocktake-table td { padding: 10px 12px; border-bottom: 1px solid var(--border-light); font-size: 13px; vertical-align: top; }
+  .stocktake-table tr:nth-child(even) td { background: var(--bg-subtle); }
+  .stocktake-table input[type="text"], .stocktake-table select { width: 100%; padding: 7px; border: 1px solid var(--border); font-family: Inter, Arial, sans-serif; font-size: 12px; }
+  .stocktake-table select { background: white; }
+  .driver-checks { display: flex; flex-wrap: wrap; gap: 4px; }
+  .driver-check { font-size: 11px; padding: 3px 7px; border: 1px solid var(--border); cursor: pointer; user-select: none; transition: all 0.1s; }
+  .driver-check:hover { background: var(--bg-subtle); }
+  .driver-check.checked { background: var(--primary); color: white; border-color: var(--primary); }
+
+  .metrics-group { margin: 24px 0; }
+  .metrics-group-title { font-size: 15px; font-weight: bold; color: var(--primary); margin-bottom: 3px; }
+  .metrics-group-desc { font-size: 12px; color: var(--tertiary); margin-bottom: 10px; }
+  .metric-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border: 1px solid var(--border-light); margin-bottom: 5px; cursor: pointer; transition: all 0.15s; }
+  .metric-item:hover { border-color: var(--secondary); background: var(--bg-subtle); }
+  .metric-item.selected { border-color: var(--primary); background: var(--bg-subtle); }
+  .metric-checkbox { width: 18px; height: 18px; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; font-size: 11px; }
+  .metric-item.selected .metric-checkbox { background: var(--primary); border-color: var(--primary); color: white; }
+  .metric-details h4 { font-family: Inter, Arial, sans-serif; font-size: 13px; color: var(--primary); margin-bottom: 2px; }
+  .metric-details p { font-size: 12px; color: var(--tertiary); line-height: 1.4; }
+  .metric-effort { display: inline-block; font-size: 10px; padding: 2px 7px; margin-top: 3px; font-weight: 700; }
+  .metric-effort.low { background: var(--success-light); color: var(--success); }
+  .metric-effort.med { background: var(--amber-light); color: var(--amber); }
+  .metric-effort.high { background: var(--red-light); color: var(--red); }
+
+  .planning-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .planning-field label { display: block; font-size: 10px; font-weight: 700; color: var(--secondary); margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.3px; }
+  .planning-field input, .planning-field select, .planning-field textarea { width: 100%; padding: 8px; border: 1px solid var(--border); font-family: Inter, Arial, sans-serif; font-size: 13px; }
+  .planning-field textarea { height: 56px; resize: vertical; }
+  .plan-metrics-list { margin-top: 4px; }
+  .plan-metric-tag { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; padding: 4px 8px; background: var(--bg-subtle); border: 1px solid var(--border); margin: 2px 2px 2px 0; color: var(--secondary); }
+  .plan-metric-tag .remove-metric { cursor: pointer; color: var(--tertiary); font-size: 14px; line-height: 1; margin-left: 2px; }
+  .plan-metric-tag .remove-metric:hover { color: var(--red); }
+  .add-metric-wrap { margin-top: 6px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .add-metric-wrap select { font-size: 11px; padding: 4px 6px; border: 1px solid var(--border); font-family: Inter, Arial, sans-serif; max-width: 280px; }
+  .add-metric-btn { font-size: 11px; padding: 4px 10px; background: var(--bg-subtle); border: 1px solid var(--border); cursor: pointer; font-weight: 700; font-family: Inter, Arial, sans-serif; color: var(--secondary); }
+  .add-metric-btn:hover { background: var(--border-light); }
+
+  .add-btn { background: none; border: 2px dashed var(--border); color: var(--secondary); padding: 10px; width: 100%; cursor: pointer; font-size: 13px; font-weight: 700; margin-top: 6px; }
+  .add-btn:hover { background: var(--bg-subtle); border-color: var(--secondary); }
+
+  .callout { background: var(--bg-subtle); border-left: 3px solid var(--border); padding: 14px 16px; margin: 18px 0; }
+  .callout p { font-size: 13px; color: var(--secondary); line-height: 1.5; }
+  .callout strong { color: var(--primary); }
+
+  .export-section { border: 2px solid var(--primary); padding: 24px; margin: 24px 0; }
+  .export-section h3 { font-size: 16px; margin-bottom: 8px; }
+  .export-preview { background: var(--bg-subtle); border: 1px solid var(--border); padding: 20px; margin: 16px 0; font-size: 14px; line-height: 1.7; }
+  .export-preview h4 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--tertiary); margin: 16px 0 6px; padding-top: 12px; border-top: 1px solid var(--border-light); }
+  .export-preview h4:first-child { border-top: none; margin-top: 0; padding-top: 0; }
+  .export-preview ul { padding-left: 18px; margin-top: 6px; }
+  .export-preview li { margin-bottom: 3px; }
+  .fill-blank { background: #FFFDE7; border-bottom: 1px dashed var(--secondary); padding: 1px 6px; font-style: italic; color: var(--secondary); }
+  .filled-value { font-weight: bold; color: var(--primary); font-style: normal; }
+
+  .btn-primary { background: var(--primary); color: var(--bg-page); border: none; padding: 11px 24px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: Inter, Arial, sans-serif; }
+  .btn-primary:hover { background: #333; }
+  .btn-secondary { background: var(--bg-page); color: var(--primary); border: 2px solid var(--primary); padding: 9px 20px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: Inter, Arial, sans-serif; }
+  .btn-secondary:hover { background: var(--bg-subtle); }
+  .nav-buttons { display: flex; justify-content: space-between; margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--border-light); }
+  .selection-counter { font-size: 12px; color: var(--tertiary); margin: 10px 0; }
+  .selection-counter strong { color: var(--primary); }
+
+  @media (max-width: 600px) {
+    .option-grid { grid-template-columns: 1fr; }
+    .planning-row { grid-template-columns: 1fr; }
+    .progress-step { font-size: 9px; padding: 10px 4px; }
+    .main { padding: 24px 16px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">STEM Engagement Strategy Guide<small>Interactive Prototype v1</small></div>
+  <div class="header-right">Generation STEM</div>
+</div>
+
+<div class="progress-bar-container">
+  <div class="progress-steps">
+    <div class="progress-step active" data-step="0" onclick="goToStep(0)"><span class="step-num">1</span> Your drivers</div>
+    <div class="progress-step" data-step="1" onclick="goToStep(1)"><span class="step-num">2</span> Activity stocktake</div>
+    <div class="progress-step" data-step="2" onclick="goToStep(2)"><span class="step-num">3</span> Pick metrics</div>
+    <div class="progress-step" data-step="3" onclick="goToStep(3)"><span class="step-num">4</span> 12-month plan</div>
+    <div class="progress-step" data-step="4" onclick="goToStep(4)"><span class="step-num">5</span> Make the case</div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- STEP 1 -->
+  <div class="section active" id="step-0">
+    <div class="intro-hero">
+      <h1>STEM Engagement Strategy Guide</h1>
+      <p>A practical tool to connect your STEM education activities to strategic priorities, select the right metrics, and build the case for sustained engagement.</p>
+      <p style="margin-top:10px; font-size:13px; opacity:0.65;">For industry professionals at any stage, from first-time participants to established programs.</p>
+    </div>
+
+    <div class="section-title">Step 1: Why is your organisation doing this?</div>
+    <div class="section-lead">Select the strategic drivers that describe why your organisation engages, or wants to engage, in STEM education. These shape the metrics and planning in later steps. Select all that apply.</div>
+
+    <div class="option-grid">
+      <div class="option-card" onclick="toggleSelect(this,'driver')" data-value="talent"><h3>Talent pipeline and recruitment</h3><p>Attracting future employees, building awareness of career opportunities, strengthening graduate and apprentice pipelines.</p></div>
+      <div class="option-card" onclick="toggleSelect(this,'driver')" data-value="social"><h3>Social licence and brand</h3><p>Strengthening community presence, demonstrating public good, building organisational reputation.</p></div>
+      <div class="option-card" onclick="toggleSelect(this,'driver')" data-value="staff"><h3>Staff development and engagement</h3><p>Providing leadership opportunities, improving communication skills, boosting employee satisfaction and retention.</p></div>
+      <div class="option-card" onclick="toggleSelect(this,'driver')" data-value="obligation"><h3>Corporate responsibility and mandate</h3><p>Meeting organisational KPIs, fulfilling public trust obligations, responding to government or board expectations.</p></div>
+      <div class="option-card" onclick="toggleSelect(this,'driver')" data-value="innovation"><h3>Innovation and R&D</h3><p>Accessing fresh thinking, connecting with university research, using student projects to explore early-stage ideas.</p></div>
+      <div class="option-card" onclick="toggleSelect(this,'driver')" data-value="equity"><h3>Equity and inclusion</h3><p>Improving diversity in your workforce pipeline, supporting underrepresented groups, reaching underserved schools and communities.</p></div>
+    </div>
+
+    <div class="tips-section">
+      <div class="tips-header" onclick="toggleTips(this)"><span>Tips for different contexts</span><span class="arrow">&#9660;</span></div>
+      <div class="tips-content">
+        <div class="tip-item"><div class="tip-label sme">SMEs and startups</div><br>Your driver might be as straightforward as "we struggle to find qualified people." That counts as a talent pipeline driver. You do not need a formal corporate social responsibility program to have a clear reason for engaging in STEM education.</div>
+        <div class="tip-item"><div class="tip-label regional">Regional and remote organisations</div><br>If your organisation is based outside a capital city, your drivers may be shaped by what is available locally. Where there are few schools or universities nearby, community presence and equity drivers may be especially relevant. Your engagement carries more weight because there is less of it in the area.</div>
+        <div class="tip-item"><div class="tip-label mature">Organisations ready to formalise</div><br>If your organisation already does some STEM engagement and you want to move it from informal activity to a supported program, consider whether it can be included in your business unit plan. Linking STEM outreach to existing reporting areas (for example, workforce development, diversity targets, or community investment) makes it easier to sustain when budgets are reviewed.</div>
+      </div>
+    </div>
+
+    <div class="nav-buttons"><div></div><button class="btn-primary" onclick="nextStep()">Continue &#8594;</button></div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="section" id="step-1">
+    <div class="section-title">Step 2: What are you already doing?</div>
+    <div class="section-lead">Even ad hoc engagement counts. This stocktake helps you see what you have. Activities you enter here will carry forward into your 12-month plan later in the guide.</div>
+
+    <table class="stocktake-table">
+      <thead><tr><th style="width:30%">Activity</th><th style="width:20%">Frequency</th><th style="width:20%">Who's involved</th><th style="width:30%">Connected to which drivers?</th></tr></thead>
+      <tbody id="stocktake-body">
+        <tr><td><input type="text" placeholder="e.g. School career talks"></td><td><select><option value="">Select...</option><option>Once-off</option><option>Annually</option><option>Every term</option><option>Monthly or more</option><option>Ad hoc / when asked</option></select></td><td><input type="text" placeholder="e.g. 2 engineers"></td><td><div class="driver-checks"><span class="driver-check" data-driver="talent" onclick="this.classList.toggle('checked')">Talent</span><span class="driver-check" data-driver="social" onclick="this.classList.toggle('checked')">Social licence</span><span class="driver-check" data-driver="staff" onclick="this.classList.toggle('checked')">Staff dev.</span><span class="driver-check" data-driver="obligation" onclick="this.classList.toggle('checked')">Responsibility</span><span class="driver-check" data-driver="innovation" onclick="this.classList.toggle('checked')">Innovation</span><span class="driver-check" data-driver="equity" onclick="this.classList.toggle('checked')">Equity</span></div></td></tr>
+        <tr><td><input type="text" placeholder="e.g. University internships"></td><td><select><option value="">Select...</option><option>Once-off</option><option>Annually</option><option>Every term</option><option>Monthly or more</option><option>Ad hoc / when asked</option></select></td><td><input type="text" placeholder="e.g. Team lead + HR"></td><td><div class="driver-checks"><span class="driver-check" data-driver="talent" onclick="this.classList.toggle('checked')">Talent</span><span class="driver-check" data-driver="social" onclick="this.classList.toggle('checked')">Social licence</span><span class="driver-check" data-driver="staff" onclick="this.classList.toggle('checked')">Staff dev.</span><span class="driver-check" data-driver="obligation" onclick="this.classList.toggle('checked')">Responsibility</span><span class="driver-check" data-driver="innovation" onclick="this.classList.toggle('checked')">Innovation</span><span class="driver-check" data-driver="equity" onclick="this.classList.toggle('checked')">Equity</span></div></td></tr>
+        <tr><td><input type="text" placeholder="e.g. Science Week activity"></td><td><select><option value="">Select...</option><option>Once-off</option><option>Annually</option><option>Every term</option><option>Monthly or more</option><option>Ad hoc / when asked</option></select></td><td><input type="text" placeholder="e.g. Whole team"></td><td><div class="driver-checks"><span class="driver-check" data-driver="talent" onclick="this.classList.toggle('checked')">Talent</span><span class="driver-check" data-driver="social" onclick="this.classList.toggle('checked')">Social licence</span><span class="driver-check" data-driver="staff" onclick="this.classList.toggle('checked')">Staff dev.</span><span class="driver-check" data-driver="obligation" onclick="this.classList.toggle('checked')">Responsibility</span><span class="driver-check" data-driver="innovation" onclick="this.classList.toggle('checked')">Innovation</span><span class="driver-check" data-driver="equity" onclick="this.classList.toggle('checked')">Equity</span></div></td></tr>
+      </tbody>
+    </table>
+    <button class="add-btn" onclick="addStocktakeRow()">+ Add another activity</button>
+
+    <div class="callout" style="margin-top:20px;"><p><strong>Not sure which drivers to connect?</strong> That is common. Many organisations run STEM activities without a clear link to strategic goals. Making those connections is what the rest of this guide helps with.</p></div>
+
+    <div class="tips-section">
+      <div class="tips-header" onclick="toggleTips(this)"><span>Tips for different contexts</span><span class="arrow">&#9660;</span></div>
+      <div class="tips-content">
+        <div class="tip-item"><div class="tip-label sme">SMEs and startups</div><br>Your list might be short. Perhaps one internship arrangement or an occasional school visit. That is a fine starting point. Even a single activity, once written down and connected to a driver, becomes the foundation for a strategy rather than an ad hoc effort.</div>
+        <div class="tip-item"><div class="tip-label regional">Regional and remote organisations</div><br>If you are based in a regional area, you may have fewer activities to list because there are fewer coordinated opportunities nearby and the logistics of participating can be significant. A shorter list is not a problem. It simply means the activities you do have are worth planning around carefully.</div>
+        <div class="tip-item"><div class="tip-label mature">Organisations ready to formalise</div><br>If there are multiple people or teams across your organisation doing STEM-related activities independently (for example, one engineer doing school visits while HR runs an internship program), this stocktake can be the start of mapping what is happening across the business. Consider sharing it with colleagues to get a more complete picture.</div>
+      </div>
+    </div>
+
+    <div class="nav-buttons"><button class="btn-secondary" onclick="prevStep()">&#8592; Back</button><button class="btn-primary" onclick="nextStep()">Continue &#8594;</button></div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="section" id="step-2">
+    <div class="section-title">Step 3: Pick your metrics</div>
+    <div class="section-lead">Here are metrics that connect to the kinds of drivers organisations typically have. Pick 2 to 5 that you could realistically start tracking. You do not need to measure everything, just enough to show progress and build the case.</div>
+    <div class="selection-counter">Selected: <strong><span id="metric-count">0</span></strong> metrics (aim for 2 to 5)</div>
+
+    <div class="metrics-group"><div class="metrics-group-title">Talent pipeline and recruitment</div><div class="metrics-group-desc">Track whether engagement contributes to finding and attracting the people you need.</div>
+      <div class="metric-item" onclick="toggleMetric(this)"><div class="metric-checkbox"></div><div class="metric-details"><h4>Number of students engaged per year</h4><p>Total students reached through talks, tours, workshops, or mentoring.</p><span class="metric-effort low">Low effort</span></div></div>
+      <div class="metric-item" onclick="toggleMetric(this)"><div class="metric-checkbox"></div><div class="metric-details"><h4>Repeat engagement rate</h4><p>How many schools or students return for a second engagement.</p><span class="metric-effort low">Low effort</span></div></div>
+      <div class="metric-item" onclick="toggleMetric(this)"><div class="metric-checkbox"></div><div class="metric-details"><h4>Intern or graduate applications from engaged cohorts</h4><p>Whether students you have engaged subsequently apply for roles at your organisation.</p><span class="metric-effort med">Medium effort. Requires tracking across recruitment and outreach systems.</span></div></div>
+      <div class="metric-item" onclick="toggleMetric(this)"><div class="metric-checkbox"></div><div class="metric-details"><h4>Time-to-fill for entry-level roles</h4><p>Whether roles fill faster in regions or disciplines where you are actively engaging.</p><span class="metric-effort med">Medium effort. Compare year on year alongside your recruitment data.</span></div></div>
+      <div class="metric-item" onclick="toggleMetric(this)"><div class="metric-checkbox"></div><div class="metric-details"><h4>Conversion rate from intern to graduate hire</h4><p>Proportion of interns subsequently offered permanent roles.</p><span class="metric-effort low">Low effort</span></div></div>
+      <div class="metric-item" onclick="toggleMetric(this)"><div class="metric-checkbox"></div><div class="metric-details"><h4>Subject enrolment trends in target disciplines</h4><p>Whether STEM subject uptake changes in schools or universities you engage with. Requires partnership with education institutions and multi-year tracking.</p><span class="metric-effort high">Long-term, high effort. Requires multi-year data and school or university cooperation.</span></div></div>
+    </div>
+
+    <div class="metrics-group"><div class="metrics-group-title">Social licence and brand</div><div class="metrics-group-desc">Track whether engagement strengthens community presence and reputation.</div>
+      <div class="metric-item" onclick="toggleMetric(this)"><div class="metric-checkbox"></div><div class="metric-details"><h4>Number of schools or community groups engaged</h4><p>Breadth of your community footprint.</p><span class="metric-effort low">Low effort</span></div></div>
+      <div class="metric-item" onclick="toggleMetric(this)"><div class="metric-checkbox"></div><div class="metric-details"><h4>Geographic reach</h4><p>Whether engagement extends beyond your head office or primary locations. Useful for demonstrating reach in annual reporting.</p><span class="metric-effort low">Low effort</span></div></div>
+      <div class="metric-item" onclick="toggleMetric(this)"><div class="metric-checkbox"></div><div class="metric-details"><h4>External mentions or coverage</h4><p>Whether your STEM involvement appears in school newsletters, local media, or social channels.</p><span class="metric-effort med">Medium effort. Requires monitoring external channels.</span></div></div>
+      <div class="metric-item" onclick="toggleMetric(this)"><div class="metric-checkbox"></div><div class="metric-details"><h4>Partner satisfaction or testimonials</h4><p>Qualitative feedback from schools or partner organisations on the value of your involvement.</p><span class="metric-effort med">Medium effort. Requires outreach to partners.</span></div></div>
+    </div>
+
+    <div class="metrics-group"><div class="metrics-group-title">Staff development and engagement</div><div class="metrics-group-desc">Track whether STEM activities benefit your people.</div>
+      <div class="metric-item" onclick="toggleMetric(this)"><div class="metric-checkbox"></div><div class="metric-details"><h4>Number of staff volunteers participating</h4><p>How many of your people are involved, and whether that number is growing.</p><span class="metric-effort low">Low effort</span></div></div>
+      <div class="metric-item" onclick="toggleMetric(this)"><div class="metric-checkbox"></div><div class="metric-details"><h4>Volunteer retention rate</h4><p>How many volunteers return for subsequent engagements. Low retention may indicate inadequate support or poor experience.</p><span class="metric-effort low">Low effort</span></div></div>
+      <div class="metric-item" onclick="toggleMetric(this)"><div class="metric-checkbox"></div><div class="metric-details"><h4>Volunteer feedback survey</h4><p>A brief 2 to 3 question survey after each engagement, capturing volunteer experience and improvement ideas.</p><span class="metric-effort low">Low effort</span></div></div>
+      <div class="metric-item" onclick="toggleMetric(this)"><div class="metric-checkbox"></div><div class="metric-details"><h4>Volunteer skills self-assessment</h4><p>Whether volunteers report improved communication, presentation, or leadership confidence after participating.</p><span class="metric-effort med">Medium effort. Requires before and after survey.</span></div></div>
+    </div>
+
+    <div class="metrics-group"><div class="metrics-group-title">Corporate responsibility and mandate</div><div class="metrics-group-desc">Track engagement in formats suited to compliance and annual reporting.</div>
+      <div class="metric-item" onclick="toggleMetric(this)"><div class="metric-checkbox"></div><div class="metric-details"><h4>Total engagement hours contributed</h4><p>Staff hours invested in STEM activities. Maps to community contribution reporting.</p><span class="metric-effort low">Low effort</span></div></div>
+      <div class="metric-item" onclick="toggleMetric(this)"><div class="metric-checkbox"></div><div class="metric-details"><h4>Activities completed versus planned</h4><p>Simple delivery rate against commitments. Demonstrates follow-through.</p><span class="metric-effort low">Low effort</span></div></div>
+      <div class="metric-item" onclick="toggleMetric(this)"><div class="metric-checkbox"></div><div class="metric-details"><h4>School or teacher feedback score</h4><p>Brief post-engagement feedback from the school side on how the activity went.</p><span class="metric-effort med">Medium effort. Requires follow-up with the school.</span></div></div>
+      <div class="metric-item" onclick="toggleMetric(this)"><div class="metric-checkbox"></div><div class="metric-details"><h4>Alignment to organisational KPIs</h4><p>A mapping exercise showing how STEM activities connect to existing performance indicators (for example, diversity targets, community investment).</p><span class="metric-effort low">Low effort. A one-off mapping exercise, not ongoing data collection.</span></div></div>
+    </div>
+
+    <div class="metrics-group"><div class="metrics-group-title">Innovation and R&D</div><div class="metrics-group-desc">Track whether student engagement generates new thinking or capability.</div>
+      <div class="metric-item" onclick="toggleMetric(this)"><div class="metric-checkbox"></div><div class="metric-details"><h4>Student projects completed with business value</h4><p>Whether intern or student projects produced usable outputs such as prototypes, analyses, or code.</p><span class="metric-effort low">Low effort</span></div></div>
+      <div class="metric-item" onclick="toggleMetric(this)"><div class="metric-checkbox"></div><div class="metric-details"><h4>Consultancy cost avoided through student work</h4><p>Whether student contributions offset work that would otherwise be outsourced.</p><span class="metric-effort med">Medium effort. Requires estimating equivalent cost.</span></div></div>
+      <div class="metric-item" onclick="toggleMetric(this)"><div class="metric-checkbox"></div><div class="metric-details"><h4>New ideas or approaches introduced</h4><p>Whether student involvement brought methods, tools, or perspectives the team had not considered.</p><span class="metric-effort low">Low effort. Qualitative tracking.</span></div></div>
+    </div>
+
+    <div class="metrics-group"><div class="metrics-group-title">Equity and inclusion</div><div class="metrics-group-desc">Track whether engagement reaches underserved communities and underrepresented groups.</div>
+      <div class="metric-item" onclick="toggleMetric(this)"><div class="metric-checkbox"></div><div class="metric-details"><h4>Proportion of engagement in lower-SES or underserved schools</h4><p>Whether your activities reach schools beyond well-resourced communities. School ICSEA data can help identify this.</p><span class="metric-effort low">Low effort</span></div></div>
+      <div class="metric-item" onclick="toggleMetric(this)"><div class="metric-checkbox"></div><div class="metric-details"><h4>Demographic diversity of students engaged</h4><p>Gender, cultural background, or disability representation among participants, where this data is available from schools.</p><span class="metric-effort high">Long-term, high effort. Depends on school data-sharing arrangements.</span></div></div>
+      <div class="metric-item" onclick="toggleMetric(this)"><div class="metric-checkbox"></div><div class="metric-details"><h4>Regional and remote reach</h4><p>Whether engagement extends beyond metropolitan areas to regional or remote schools.</p><span class="metric-effort low">Low effort</span></div></div>
+    </div>
+
+    <div class="tips-section">
+      <div class="tips-header" onclick="toggleTips(this)"><span>Tips for different contexts</span><span class="arrow">&#9660;</span></div>
+      <div class="tips-content">
+        <div class="tip-item"><div class="tip-label sme">SMEs and startups</div><br>Start with two low-effort metrics. For example, "number of students engaged" and "volunteer feedback survey" are simple to collect and enough to demonstrate that you are paying attention to outcomes. You can add more ambitious metrics once your program is established.</div>
+        <div class="tip-item"><div class="tip-label mature">Organisations ready to formalise</div><br>If your organisation already uses dashboards or reporting tools for executive decisions (for example, Power BI or similar), consider formatting your STEM tracking data to fit those tools. If your organisation runs multiple STEM initiatives across different teams, aggregating data into one view can show collective impact that individual activities cannot demonstrate on their own.</div>
+      </div>
+    </div>
+
+    <div class="nav-buttons"><button class="btn-secondary" onclick="prevStep()">&#8592; Back</button><button class="btn-primary" onclick="nextStep()">Continue &#8594;</button></div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="section" id="step-3">
+    <div class="section-title">Step 4: Plan your next 12 months</div>
+    <div class="section-lead">A realistic plan with two or three activities you will actually do is more valuable than an ambitious plan that stalls. You can always add more later.</div>
+
+    <div class="callout" id="plan-preload-note" style="display:none; margin-bottom:20px;"><p><strong>Pre-loaded from your stocktake.</strong> We have carried over the activities you listed in Step 2. The metrics shown under each activity are the ones you selected in Step 3 that match the drivers you connected to that activity. You can remove metrics that are not relevant to a specific activity, or add additional ones using the dropdown.</p></div>
+
+    <div id="activity-plan"></div>
+    <button class="add-btn" onclick="addPlanActivity()">+ Add another activity</button>
+
+    <div class="tips-section" style="margin-top:24px;">
+      <div class="tips-header" onclick="toggleTips(this)"><span>Tips for different contexts</span><span class="arrow">&#9660;</span></div>
+      <div class="tips-content">
+        <div class="tip-item"><div class="tip-label sme">SMEs and startups</div><br>One well-executed activity per year is a strong start. For a small organisation where the founder or a senior team member is the person doing the engagement, time is the scarcest resource. A single school visit with proper follow-up tracking is more sustainable than committing to a program you cannot maintain.</div>
+        <div class="tip-item"><div class="tip-label regional">Regional and remote organisations</div><br>If travel to schools takes significant time, consider whether some engagements could be done virtually. A recorded video presentation or an online mentoring session can extend your reach without requiring a full day out of the office for travel. This is particularly relevant if you are the only person in your organisation doing this work.</div>
+        <div class="tip-item"><div class="tip-label mature">Organisations ready to formalise</div><br>If you know that colleagues in other parts of your organisation are also engaging with schools (for example, a different office or a different team), this plan is an opportunity to coordinate. A shared calendar or spreadsheet listing all STEM activities across the business, who is leading each one, and when they happen can help avoid duplication and identify gaps in geographic or sector coverage.</div>
+      </div>
+    </div>
+
+    <div class="nav-buttons"><button class="btn-secondary" onclick="prevStep()">&#8592; Back</button><button class="btn-primary" onclick="nextStep()">Continue &#8594;</button></div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="section" id="step-4">
+    <div class="section-title">Step 5: Make the case</div>
+    <div class="section-lead">This step brings together everything you have entered into a summary you can use to brief leadership, include in a business case, or reference in annual reporting.</div>
+
+    <div class="callout" style="margin-bottom:24px;"><p><strong>How this works.</strong> The document preview below pulls your selections from Steps 1 to 4. Your inputs appear in bold. Sections highlighted in <span class="fill-blank">yellow like this</span> are places where you will need to add specific numbers or details for your context. When you export, this becomes a standalone Word document you can edit and share. The yellow guidance brackets are retained in the exported file so you know where to fill in the gaps.</p></div>
+
+    <div class="export-section">
+      <h3>Document preview</h3>
+      <p style="font-size:12px; color:var(--tertiary); margin-bottom:12px;">Your inputs are shown in bold. Yellow fields need your input.</p>
+
+      <div class="export-preview">
+        <h4>Strategic drivers</h4>
+        <p>Our organisation engages in STEM education to support the following strategic priorities: <strong id="export-drivers" class="filled-value"></strong></p>
+
+        <h4>Current engagement</h4>
+        <div id="export-activities-list"></div>
+
+        <h4>What we will measure</h4>
+        <p>We have selected the following metrics to track the impact of our engagement:</p>
+        <ul id="export-metrics-list"></ul>
+
+        <h4>12-month plan</h4>
+        <div id="export-plan-list"></div>
+
+        <h4>The case for leadership</h4>
+        <p><strong>What will it cost?</strong><br>
+        The primary cost is staff time. Our plan involves <span class="fill-blank">[number of activities, add yours]</span> activities over 12 months, requiring approximately <span class="fill-blank">[estimated total hours, add yours]</span> hours of staff time. Direct costs such as materials and travel are estimated at <span class="fill-blank">[amount or "minimal", add yours]</span>.</p>
+
+        <p style="margin-top:12px;"><strong>How long before we see results?</strong><br>
+        Participation counts and volunteer feedback are available immediately after each engagement. Repeat engagement rates and school feedback can be assessed after one full cycle. Pipeline metrics such as recruitment outcomes typically require one to two years to show patterns.</p>
+
+        <p style="margin-top:12px;"><strong>What do we need to commit?</strong><br>
+        We need <span class="fill-blank">[number of staff, add yours]</span> staff members contributing approximately <span class="fill-blank">[hours per person, add yours]</span> hours per <span class="fill-blank">[quarter or year, select]</span>. We need a nominated point person to coordinate activities and track metrics. Beyond that, we need leadership endorsement, not additional budget.</p>
+      </div>
+    </div>
+
+    <div class="tips-section">
+      <div class="tips-header" onclick="toggleTips(this)"><span>Tips for different contexts</span><span class="arrow">&#9660;</span></div>
+      <div class="tips-content">
+        <div class="tip-item"><div class="tip-label sme">SMEs and startups</div><br>Your "leadership" might be a business partner, a co-founder, or yourself. The value of this document is still real. It clarifies your own thinking and gives you something written down to revisit. For a small business, the case might be a single paragraph discussed in a team meeting rather than a formal board paper.</div>
+        <div class="tip-item"><div class="tip-label mature">Organisations ready to formalise</div><br>If your organisation publishes an annual report or sustainability report, the language in the exported document can be adapted for that purpose. You may also want to format your metrics data to sit alongside other reporting your organisation already does, such as community investment hours or diversity and inclusion targets.</div>
+      </div>
+    </div>
+
+    <p style="font-size:14px; color:var(--secondary); margin-top:24px;"><strong>What happens next?</strong> As you build a track record of engagement and data, revisit each step to refine your approach and strengthen your case.</p>
+
+    <div class="nav-buttons">
+      <button class="btn-secondary" onclick="prevStep()">&#8592; Back</button>
+      <button class="btn-primary" onclick="exportToDocx()">Export as Word document &#8594;</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let currentStep = 0;
+  const totalSteps = 5;
+  let selectedDrivers = new Set();
+
+  const driverMap = {
+    'talent': 'Talent pipeline and recruitment', 'social': 'Social licence and brand',
+    'staff': 'Staff development and engagement', 'obligation': 'Corporate responsibility and mandate',
+    'innovation': 'Innovation and R&D', 'equity': 'Equity and inclusion'
+  };
+
+  const driverMetrics = {
+    'talent': ['Number of students engaged per year','Repeat engagement rate','Intern or graduate applications from engaged cohorts','Time-to-fill for entry-level roles','Conversion rate from intern to graduate hire','Subject enrolment trends in target disciplines'],
+    'social': ['Number of schools or community groups engaged','Geographic reach','External mentions or coverage','Partner satisfaction or testimonials'],
+    'staff': ['Number of staff volunteers participating','Volunteer retention rate','Volunteer feedback survey','Volunteer skills self-assessment'],
+    'obligation': ['Total engagement hours contributed','Activities completed versus planned','School or teacher feedback score','Alignment to organisational KPIs'],
+    'innovation': ['Student projects completed with business value','Consultancy cost avoided through student work','New ideas or approaches introduced'],
+    'equity': ['Proportion of engagement in lower-SES or underserved schools','Demographic diversity of students engaged','Regional and remote reach']
+  };
+
+  const allMetrics = Object.values(driverMetrics).flat().filter((v,i,a) => a.indexOf(v) === i);
+
+  function goToStep(step) {
+    if (step > currentStep + 1) return;
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById('step-' + step).classList.add('active');
+    document.querySelectorAll('.progress-step').forEach((ps, i) => {
+      ps.classList.remove('active');
+      if (i < step) ps.classList.add('completed'); else ps.classList.remove('completed');
+      if (i === step) ps.classList.add('active');
+    });
+    currentStep = step;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (step === 3) populatePlanFromStocktake();
+    if (step === 4) populateExportPreview();
+  }
+  function nextStep() { if (currentStep < totalSteps - 1) goToStep(currentStep + 1); }
+  function prevStep() { if (currentStep > 0) goToStep(currentStep - 1); }
+
+  function toggleSelect(card, type) {
+    card.classList.toggle('selected');
+    if (type === 'driver') {
+      const val = card.dataset.value;
+      if (selectedDrivers.has(val)) selectedDrivers.delete(val); else selectedDrivers.add(val);
+    }
+  }
+  function toggleTips(header) { header.classList.toggle('open'); header.nextElementSibling.classList.toggle('open'); }
+
+  function toggleMetric(item) {
+    item.classList.toggle('selected');
+    item.querySelector('.metric-checkbox').textContent = item.classList.contains('selected') ? '\u2713' : '';
+    document.getElementById('metric-count').textContent = document.querySelectorAll('.metric-item.selected').length;
+  }
+
+  function getSelectedMetricNames() {
+    return Array.from(document.querySelectorAll('.metric-item.selected h4')).map(h => h.textContent);
+  }
+  function getDriverNames() { return Array.from(selectedDrivers).map(d => driverMap[d]); }
+
+  function getStocktakeActivities() {
+    const acts = [];
+    document.querySelectorAll('#stocktake-body tr').forEach(row => {
+      const name = row.querySelector('td:nth-child(1) input').value.trim();
+      const freq = row.querySelector('td:nth-child(2) select').value;
+      const who = row.querySelector('td:nth-child(3) input').value.trim();
+      const driverKeys = Array.from(row.querySelectorAll('.driver-check.checked')).map(c => c.dataset.driver);
+      const driverLabels = Array.from(row.querySelectorAll('.driver-check.checked')).map(c => c.textContent);
+      if (name) acts.push({ name, freq, who, driverKeys, drivers: driverLabels });
+    });
+    return acts;
+  }
+
+  function driverChecksHTML() {
+    return '<div class="driver-checks"><span class="driver-check" data-driver="talent" onclick="this.classList.toggle(\'checked\')">Talent</span><span class="driver-check" data-driver="social" onclick="this.classList.toggle(\'checked\')">Social licence</span><span class="driver-check" data-driver="staff" onclick="this.classList.toggle(\'checked\')">Staff dev.</span><span class="driver-check" data-driver="obligation" onclick="this.classList.toggle(\'checked\')">Responsibility</span><span class="driver-check" data-driver="innovation" onclick="this.classList.toggle(\'checked\')">Innovation</span><span class="driver-check" data-driver="equity" onclick="this.classList.toggle(\'checked\')">Equity</span></div>';
+  }
+
+  function addStocktakeRow() {
+    const tbody = document.getElementById('stocktake-body');
+    const row = document.createElement('tr');
+    row.innerHTML = '<td><input type="text" placeholder="e.g. Another activity"></td><td><select><option value="">Select...</option><option>Once-off</option><option>Annually</option><option>Every term</option><option>Monthly or more</option><option>Ad hoc / when asked</option></select></td><td><input type="text" placeholder="e.g. 1 staff member"></td><td>' + driverChecksHTML() + '</td>';
+    tbody.appendChild(row);
+  }
+
+  function getMetricsForDrivers(driverKeys) {
+    const selectedMetrics = new Set(getSelectedMetricNames());
+    const relevant = new Set();
+    driverKeys.forEach(dk => {
+      (driverMetrics[dk] || []).forEach(m => {
+        if (selectedMetrics.has(m)) relevant.add(m);
+      });
+    });
+    return Array.from(relevant);
+  }
+
+  function getAvailableMetrics(currentMetrics) {
+    const all = getSelectedMetricNames();
+    const current = new Set(currentMetrics);
+    return all.filter(m => !current.has(m));
+  }
+
+  function removeMetricTag(btn) {
+    btn.parentElement.remove();
+  }
+
+  function addMetricToActivity(selectEl) {
+    const val = selectEl.value;
+    if (!val || val === '__custom__') return;
+    const container = selectEl.closest('.planning-field').querySelector('.plan-metrics-list');
+    const tag = document.createElement('span');
+    tag.className = 'plan-metric-tag';
+    tag.innerHTML = val + ' <span class="remove-metric" onclick="removeMetricTag(this)">&times;</span>';
+    container.appendChild(tag);
+    const opt = selectEl.querySelector('option[value="' + CSS.escape(val) + '"]');
+    if (opt) opt.remove();
+    selectEl.value = '';
+  }
+
+  function addCustomMetric(btn) {
+    const name = prompt('Enter your custom metric name:');
+    if (!name || !name.trim()) return;
+    const container = btn.closest('.planning-field').querySelector('.plan-metrics-list');
+    const tag = document.createElement('span');
+    tag.className = 'plan-metric-tag';
+    tag.innerHTML = name.trim() + ' <span class="remove-metric" onclick="removeMetricTag(this)">&times;</span>';
+    container.appendChild(tag);
+  }
+
+  function buildMetricsUI(metricsForActivity) {
+    const tags = metricsForActivity.map(m =>
+      '<span class="plan-metric-tag">' + m + ' <span class="remove-metric" onclick="removeMetricTag(this)">&times;</span></span>'
+    ).join('');
+    const available = getAvailableMetrics(metricsForActivity);
+    const opts = available.map(m => '<option value="' + m + '">' + m + '</option>').join('');
+    return '<div class="plan-metrics-list">' + tags + '</div>' +
+      '<div class="add-metric-wrap">' +
+        '<select onchange="addMetricToActivity(this)"><option value="">+ Add a metric...</option>' + opts + '</select>' +
+        '<button class="add-metric-btn" onclick="addCustomMetric(this)">+ Custom metric</button>' +
+      '</div>';
+  }
+
+  function timingSelectHTML() {
+    return '<select><option value="">Select timing...</option>' +
+      '<option>Q1 (Jan to Mar)</option><option>Q2 (Apr to Jun)</option>' +
+      '<option>Q3 (Jul to Sep)</option><option>Q4 (Oct to Dec)</option>' +
+      '<option>Ongoing throughout the year</option><option>Ad hoc, as opportunities arise</option>' +
+      '<option>Not yet planned</option></select>';
+  }
+
+  function populatePlanFromStocktake() {
+    const container = document.getElementById('activity-plan');
+    const note = document.getElementById('plan-preload-note');
+    const acts = getStocktakeActivities();
+    container.innerHTML = '';
+
+    if (acts.length === 0) {
+      note.style.display = 'none';
+      const div = document.createElement('div');
+      const allSelected = getSelectedMetricNames();
+      div.innerHTML = '<div class="planning-row"><div class="planning-field"><label>Activity</label><input type="text" placeholder="e.g. School visit program"></div><div class="planning-field"><label>Timing</label>' + timingSelectHTML() + '</div><div class="planning-field"><label>Who is responsible</label><input type="text" placeholder="e.g. Name (Team)"></div></div><div class="planning-field" style="margin-bottom:16px;"><label>What you will track for this activity</label>' + buildMetricsUI(allSelected) + '</div>';
+      container.appendChild(div);
+      return;
+    }
+
+    note.style.display = 'block';
+    acts.forEach((a, i) => {
+      if (i > 0) { const hr = document.createElement('hr'); hr.style.cssText = 'margin:20px 0;border:none;border-top:1px solid #E8E8E8;'; container.appendChild(hr); }
+      const div = document.createElement('div');
+      const metricsForThis = getMetricsForDrivers(a.driverKeys);
+      div.innerHTML = '<div class="planning-row"><div class="planning-field"><label>Activity</label><input type="text" value="' + (a.name||'') + '" placeholder="e.g. School visit program"></div><div class="planning-field"><label>Timing</label>' + timingSelectHTML() + '</div><div class="planning-field"><label>Who is responsible</label><input type="text" value="' + (a.who||'') + '" placeholder="e.g. Name (Team)"></div></div><div class="planning-field" style="margin-bottom:16px;"><label>What you will track for this activity</label>' + buildMetricsUI(metricsForThis) + '</div>';
+      container.appendChild(div);
+    });
+  }
+
+  function addPlanActivity() {
+    const plan = document.getElementById('activity-plan');
+    const hr = document.createElement('hr'); hr.style.cssText = 'margin:20px 0;border:none;border-top:1px solid #E8E8E8;';
+    plan.appendChild(hr);
+    const div = document.createElement('div');
+    div.innerHTML = '<div class="planning-row"><div class="planning-field"><label>Activity</label><input type="text" placeholder="e.g. New activity"></div><div class="planning-field"><label>Timing</label>' + timingSelectHTML() + '</div><div class="planning-field"><label>Who is responsible</label><input type="text" placeholder="e.g. Name (Team)"></div></div><div class="planning-field" style="margin-bottom:16px;"><label>What you will track for this activity</label>' + buildMetricsUI(getSelectedMetricNames()) + '</div>';
+    plan.appendChild(div);
+  }
+
+  function getPlanItems() {
+    const planItems = [];
+    document.querySelectorAll('#activity-plan .planning-row').forEach(row => {
+      const inputs = row.querySelectorAll('input, select');
+      if (inputs.length >= 3) {
+        const name = inputs[0].value.trim();
+        const when = inputs[1].value;
+        const who = inputs[2].value.trim();
+        if (name) planItems.push({ name, when, who });
+      }
+    });
+    return planItems;
+  }
+
+  function getPlanMetrics() {
+    const all = [];
+    document.querySelectorAll('#activity-plan .plan-metrics-list').forEach(list => {
+      list.querySelectorAll('.plan-metric-tag').forEach(tag => {
+        const text = tag.childNodes[0].textContent.trim();
+        if (text && !all.includes(text)) all.push(text);
+      });
+    });
+    return all;
+  }
+
+  function populateExportPreview() {
+    const drivers = getDriverNames();
+    document.getElementById('export-drivers').textContent = drivers.length > 0 ? drivers.join(', ') : '[No drivers selected. Return to Step 1.]';
+
+    const acts = getStocktakeActivities();
+    const actDiv = document.getElementById('export-activities-list');
+    actDiv.innerHTML = acts.length > 0
+      ? '<p>We currently undertake the following STEM engagement activities:</p><ul>' + acts.map(a => '<li><strong>' + a.name + '</strong>' + (a.freq ? ', ' + a.freq.toLowerCase() : '') + (a.who ? ' (' + a.who + ')' : '') + (a.drivers.length > 0 ? '. Connected to: ' + a.drivers.join(', ') : '') + '</li>').join('') + '</ul>'
+      : '<p><span class="fill-blank">[List your current activities here, or return to Step 2.]</span></p>';
+
+    const metrics = getPlanMetrics();
+    document.getElementById('export-metrics-list').innerHTML = metrics.length > 0
+      ? metrics.map(m => '<li>' + m + '</li>').join('')
+      : '<li><span class="fill-blank">[No metrics selected. Return to Step 3.]</span></li>';
+
+    const planItems = getPlanItems();
+    document.getElementById('export-plan-list').innerHTML = planItems.length > 0
+      ? '<p>Over the next 12 months, we plan to:</p><ul>' + planItems.map(p => '<li><strong>' + p.name + '</strong>' + (p.when ? ', ' + p.when : '') + (p.who ? ' (' + p.who + ')' : '') + '</li>').join('') + '</ul>'
+      : '<p><span class="fill-blank">[Add planned activities in Step 4.]</span></p>';
+  }
+
+  async function exportToDocx() {
+    const { Document, Packer, Paragraph, TextRun, HeadingLevel } = docx;
+
+    const drivers = getDriverNames();
+    const acts = getStocktakeActivities();
+    const metrics = getPlanMetrics();
+    const planItems = getPlanItems();
+
+    const children = [];
+
+    children.push(new Paragraph({ children: [new TextRun({ text: 'STEM Engagement Strategy', bold: true, size: 48, font: 'Georgia' })], spacing: { after: 200 } }));
+    children.push(new Paragraph({ children: [new TextRun({ text: 'Organisational summary', size: 24, color: '555555', font: 'Arial' })], spacing: { after: 400 } }));
+
+    children.push(new Paragraph({ children: [new TextRun({ text: 'Strategic Drivers', bold: true, size: 28, font: 'Georgia' })], spacing: { before: 300, after: 200 }, heading: HeadingLevel.HEADING_1 }));
+    children.push(new Paragraph({ children: [
+      new TextRun({ text: 'Our organisation engages in STEM education to support: ', size: 22, font: 'Arial' }),
+      new TextRun({ text: drivers.length > 0 ? drivers.join(', ') + '.' : '[Add your strategic drivers here.]', bold: drivers.length > 0, size: 22, font: 'Arial', italics: drivers.length === 0 })
+    ], spacing: { after: 200 } }));
+
+    children.push(new Paragraph({ children: [new TextRun({ text: 'Current Engagement', bold: true, size: 28, font: 'Georgia' })], spacing: { before: 300, after: 200 }, heading: HeadingLevel.HEADING_1 }));
+    if (acts.length > 0) {
+      children.push(new Paragraph({ children: [new TextRun({ text: 'We currently undertake the following STEM engagement activities:', size: 22, font: 'Arial' })], spacing: { after: 100 } }));
+      acts.forEach(a => {
+        let desc = a.name;
+        if (a.freq) desc += ', ' + a.freq.toLowerCase();
+        if (a.who) desc += ' (' + a.who + ')';
+        if (a.drivers.length > 0) desc += '. Connected to: ' + a.drivers.join(', ');
+        children.push(new Paragraph({ children: [new TextRun({ text: '    \u2022  ' + desc, size: 22, font: 'Arial' })], spacing: { after: 60 } }));
+      });
+    } else {
+      children.push(new Paragraph({ children: [new TextRun({ text: '[List your current activities here.]', italics: true, size: 22, font: 'Arial' })], spacing: { after: 200 } }));
+    }
+
+    children.push(new Paragraph({ children: [new TextRun({ text: 'What We Will Measure', bold: true, size: 28, font: 'Georgia' })], spacing: { before: 300, after: 200 }, heading: HeadingLevel.HEADING_1 }));
+    if (metrics.length > 0) {
+      children.push(new Paragraph({ children: [new TextRun({ text: 'We have selected the following metrics:', size: 22, font: 'Arial' })], spacing: { after: 100 } }));
+      metrics.forEach(m => {
+        children.push(new Paragraph({ children: [new TextRun({ text: '    \u2022  ' + m, size: 22, font: 'Arial' })], spacing: { after: 60 } }));
+      });
+    } else {
+      children.push(new Paragraph({ children: [new TextRun({ text: '[Select metrics from the guide.]', italics: true, size: 22, font: 'Arial' })], spacing: { after: 200 } }));
+    }
+
+    children.push(new Paragraph({ children: [new TextRun({ text: '12-Month Plan', bold: true, size: 28, font: 'Georgia' })], spacing: { before: 300, after: 200 }, heading: HeadingLevel.HEADING_1 }));
+    if (planItems.length > 0) {
+      children.push(new Paragraph({ children: [new TextRun({ text: 'Over the next 12 months, we plan to:', size: 22, font: 'Arial' })], spacing: { after: 100 } }));
+      planItems.forEach(p => {
+        let desc = p.name;
+        if (p.when) desc += ', ' + p.when;
+        if (p.who) desc += ' (' + p.who + ')';
+        children.push(new Paragraph({ children: [new TextRun({ text: '    \u2022  ' + desc, size: 22, font: 'Arial' })], spacing: { after: 60 } }));
+      });
+    } else {
+      children.push(new Paragraph({ children: [new TextRun({ text: '[Add planned activities.]', italics: true, size: 22, font: 'Arial' })], spacing: { after: 200 } }));
+    }
+
+    children.push(new Paragraph({ children: [new TextRun({ text: 'The Case for Leadership', bold: true, size: 28, font: 'Georgia' })], spacing: { before: 300, after: 200 }, heading: HeadingLevel.HEADING_1 }));
+    children.push(new Paragraph({ children: [new TextRun({ text: 'What will it cost?', bold: true, size: 22, font: 'Arial' })], spacing: { after: 100 } }));
+    children.push(new Paragraph({ children: [new TextRun({ text: 'The primary cost is staff time. Our plan involves [number of activities] activities over 12 months, requiring approximately [estimated total hours] hours of staff time. Direct costs such as materials and travel are estimated at [amount or "minimal"].', size: 22, font: 'Arial' })], spacing: { after: 200 } }));
+    children.push(new Paragraph({ children: [new TextRun({ text: 'How long before we see results?', bold: true, size: 22, font: 'Arial' })], spacing: { after: 100 } }));
+    children.push(new Paragraph({ children: [new TextRun({ text: 'Participation counts and volunteer feedback are available immediately after each engagement. Repeat engagement rates and school feedback can be assessed after one full cycle. Pipeline metrics such as recruitment outcomes typically require one to two years to show patterns.', size: 22, font: 'Arial' })], spacing: { after: 200 } }));
+    children.push(new Paragraph({ children: [new TextRun({ text: 'What do we need to commit?', bold: true, size: 22, font: 'Arial' })], spacing: { after: 100 } }));
+    children.push(new Paragraph({ children: [new TextRun({ text: 'We need [number of staff] staff members contributing approximately [hours per person] hours per [quarter or year]. We need a nominated point person to coordinate activities and track metrics. Beyond that, we need leadership endorsement, not additional budget.', size: 22, font: 'Arial' })], spacing: { after: 200 } }));
+
+    const doc = new Document({ sections: [{ children }] });
+    const blob = await Packer.toBlob(doc);
+    saveAs(blob, 'STEM-Engagement-Strategy.docx');
+  }
+</script>
+
+</body>
+</html>
